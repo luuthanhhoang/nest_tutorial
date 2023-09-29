@@ -1,4 +1,40 @@
-import { Controller } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Req,
+  Res,
+} from '@nestjs/common';
+import { Request, Response } from 'express';
+import { CustomersService } from 'src/customers/services/customers/customers.service';
 
 @Controller('customers')
-export class CustomersController {}
+export class CustomersController {
+  constructor(private readonly customersService: CustomersService) {}
+
+  @Get(':id')
+  getCustomerById(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req: Request,
+    @Res() res: Response,
+  ): any {
+    const customerById = this.customersService.getAllCustomers(id);
+    if (customerById) {
+      res.send(customerById);
+    } else {
+      res.status(400).send({ msg: 'Customer not found' });
+    }
+  }
+
+  @Get('/search/:id')
+  searchCustomerById(@Param('id', ParseIntPipe) id: number) {
+    const customerById = this.customersService.getAllCustomers(id);
+    if (customerById) {
+      return customerById;
+    } else
+      throw new HttpException('Customer not found', HttpStatus.BAD_REQUEST);
+  }
+}
