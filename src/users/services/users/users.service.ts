@@ -7,14 +7,17 @@ import { UserDto } from 'src/users/dtos/users.dto';
 export class UsersService {
   private users: User[] = [
     {
+      id: 1,
       username: 'htl',
       password: 'htl',
     },
     {
+      id: 2,
       username: 'bxl',
       password: 'bxl',
     },
     {
+      id: 3,
       username: 'pat',
       password: 'pat',
     },
@@ -26,5 +29,9 @@ export class UsersService {
 
   getUserByUsername(username: string): User {
     return this.users.find((u) => u.username === username);
+  }
+
+  getUserById(id: number): User {
+    return this.users.find((u) => u.id === id);
   }
 }
